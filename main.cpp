@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include "heap_sort.h"
 
 
 #include "include/rapidjson/document.h"
@@ -78,6 +79,13 @@ int main() {
         cout << "Categories: ";
         for (const auto& cat : b.categories) cout << cat << " ";
         cout << "\n----------------\n";
+    }
+
+    /////testing////
+    BinaryHeap test_1= BinaryHeap();
+    vector <int> final=test_1.heapsort({1,50,6,7,8,2,10,10,8}, 9);
+    for (auto item: final){
+        cout<<item<<endl;
     }
 
 
