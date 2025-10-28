@@ -39,7 +39,6 @@ int main() {
     }
 
     vector<Business> businesses;
-    businesses.reserve(150000); // optional, speeds up push_back
 
     string line;
     while (getline(file, line)) {
@@ -73,7 +72,7 @@ int main() {
     cout << "Loaded " << businesses.size() << " businesses.\n";
 
     // Example: print first 5 businesses
-    for (size_t i = 100000; i < 100005 && i < businesses.size(); ++i) {
+    for (size_t i = 0; i < 5 && i < businesses.size(); ++i) {
         const auto& b = businesses[i];
         cout << b.business_id << ", " << b.name << ", " << b.stars << ", " << b.city << "\n";
         cout << "Categories: ";
