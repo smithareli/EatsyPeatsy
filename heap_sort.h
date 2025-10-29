@@ -1,18 +1,20 @@
 #include <iostream>
 #include <vector>
+#include "Business.h"
 using namespace std;
 class BinaryHeap{
-    vector<int> heapArray;
+    vector<Business*> heapArray;
     void heapifyDown(int index){
-        if (((2*index+1)<heapArray.size()&& heapArray[index]<heapArray[2*index+1] )||((2*index+2)<heapArray.size() && heapArray[index]<heapArray[2*index+2])){
+        if (((2*index+1)<heapArray.size()&& (heapArray[index]->stars)<(heapArray[2*index+1]->stars) )||((2*index+2)<heapArray.size() && (heapArray[index]->stars
+        )<(heapArray[2*index+2]->stars))){
             int biggest;
-            if(heapArray[2*index+1]>heapArray[2*index+2]){
+            if((heapArray[2*index+1]->stars)>(heapArray[2*index+2])->stars){
                 biggest=2*index+1;
             }
             else{
                 biggest=2*index+2;
             }
-                int temp=heapArray[biggest];
+                Business* temp=heapArray[biggest];
                 heapArray[biggest]=heapArray[index];
                 heapArray[index]=temp;
                 heapifyDown(biggest);
@@ -23,20 +25,20 @@ class BinaryHeap{
     BinaryHeap(){
         
     }
-    void insert(int num){
-        heapArray.push_back(num);
+    void insert(Business* Bus){
+        heapArray.push_back(Bus);
         int child=heapArray.size()-1;
         int parent=(child-1)/2;
-        while(parent>=0 && heapArray[parent]<heapArray[child]){
-            int temp=heapArray[parent];
+        while(parent>=0 && (heapArray[parent]->stars)<(heapArray[child]->stars)){
+            Business* temp=heapArray[parent];
             heapArray[parent]=heapArray[child];
             heapArray[child]=temp;
             child=parent;
             parent=(child-1)/2;
         }
     }
-    int deletion(){
-        int temp=heapArray[0];
+    Business* deletion(){
+        Business* temp=heapArray[0];
         heapArray[0]=heapArray[heapArray.size()-1];
         heapArray.pop_back();
         heapifyDown(0);
@@ -44,11 +46,11 @@ class BinaryHeap{
 
     
     }
-    vector<int> heapsort(vector<int> heap, int size){
+    vector<Business*> heapsort(vector<Business*> heap, int size){
         for (auto item: heap){
             insert(item);
         }
-        vector<int> final;
+        vector<Business*> final;
         for (int i=0; i<size; i++){
             final.push_back(deletion());
         }

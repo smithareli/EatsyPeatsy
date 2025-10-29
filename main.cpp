@@ -3,19 +3,12 @@
 #include <vector>
 #include <string>
 #include "heap_sort.h"
-
+#include "Business.h"
 
 #include "include/rapidjson/document.h"
 
 using namespace std;
 
-struct Business {
-    string business_id;
-    string name;
-    double stars;
-    string city;
-    vector<string> categories;
-};
 
 vector<string> splitCategories(const string& cats_str) {
     vector<string> result;
@@ -71,10 +64,12 @@ int main() {
     }
 
     cout << "Loaded " << businesses.size() << " businesses.\n";
+    vector<Business*> tests_1;
 
     // Example: print first 5 businesses
     for (size_t i = 0; i < 5 && i < businesses.size(); ++i) {
         const auto& b = businesses[i];
+        tests_1.push_back(&businesses[i]);
         cout << b.business_id << ", " << b.name << ", " << b.stars << ", " << b.city << "\n";
         cout << "Categories: ";
         for (const auto& cat : b.categories) cout << cat << " ";
@@ -83,9 +78,9 @@ int main() {
 
     /////testing////
     BinaryHeap test_1= BinaryHeap();
-    vector <int> final=test_1.heapsort({1,50,6,7,8,2,10,10,8}, 9);
+    vector <Business*> final=test_1.heapsort(tests_1, 5);
     for (auto item: final){
-        cout<<item<<endl;
+        cout<<item->name<<","<< item->stars<<endl;
     }
 
 
