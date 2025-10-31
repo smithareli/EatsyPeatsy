@@ -25,6 +25,26 @@ vector<string> splitCategories(const string& cats_str) {
     return result;
 }
 
+void filter(vector<Business>& list, string keyword){ 
+    int i = 0; 
+    while(i<list.size()){
+        vector<string>& categories = list[i].categories; 
+        bool found = false; 
+        for (int j = 0; j<categories.size(); j++){
+            if (categories[j] == keyword){
+                found = true; 
+                break;
+            }
+        }
+        
+        if (!found){
+            list.erase(list.begin()+i);
+        } else {
+            i++;
+        }
+    }
+}
+
 int main() {
     ifstream file("yelp_academic_dataset_business.json");
     if (!file.is_open()) {
