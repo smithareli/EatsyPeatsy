@@ -5,6 +5,7 @@
 #include "heap_sort.h"
 #include "Business.h"
 #include"merge_sort.h"
+
 #include "include/rapidjson/document.h"
 
 using namespace std;
@@ -22,6 +23,26 @@ vector<string> splitCategories(const string& cats_str) {
         }
     }
     if (!cat.empty()) result.push_back(cat); // add last category
+    return result;
+}
+
+vector<Business> filter(vector<Business>& list, string keyword){ 
+    int i = 0; 
+    vector<Business> result; 
+    for (int i = 0; i<list.size(); i++){
+        vector<string>& categories = list[i].categories; 
+        bool found = false; 
+        for (int j = 0; j<categories.size(); j++){
+            if (categories[j] == keyword){
+                found = true; 
+                break;
+            }
+        }
+
+        if (found){
+            result.push_back(list[i]);
+        }
+    }
     return result;
 }
 
@@ -65,9 +86,10 @@ int main() {
 
     cout << "Loaded " << businesses.size() << " businesses.\n";
     vector<Business*> tests_1;
+    businesses = filter(businesses, "Restaurants");
 
     // Example: print first 5 businesses
-    for (size_t i = 0; i < 5 && i < businesses.size(); ++i) {
+    for (size_t i = 0; i < 100 && i < businesses.size(); ++i) {
         const auto& b = businesses[i];
         tests_1.push_back(&businesses[i]);
         cout << b.business_id << ", " << b.name << ", " << b.stars << ", " << b.city << "\n";
@@ -75,9 +97,10 @@ int main() {
         for (const auto& cat : b.categories) cout << cat << " ";
         cout << "\n----------------\n";
     }
+    cout<< "New size: " << businesses.size();
 
-    /////testing////
-    BinaryHeap test_1= BinaryHeap();
+    /////testing//// 
+    /*BinaryHeap test_1= BinaryHeap();
     vector <Business*> final=test_1.heapsort(tests_1, 5);
     for (auto item: final){
         cout<<item->name<<","<< item->stars<<endl;
@@ -85,8 +108,8 @@ int main() {
     mergesort(tests_1,0,4);
     for (auto item: tests_1){
         cout<<item->name<<","<< item->stars<<endl;
-    }
-
+    }*/
+    
 
     return 0;
 }
