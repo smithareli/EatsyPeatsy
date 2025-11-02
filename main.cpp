@@ -5,7 +5,6 @@
 #include "heap_sort.h"
 #include "Business.h"
 #include"merge_sort.h"
-
 #include "include/rapidjson/document.h"
 
 using namespace std;
