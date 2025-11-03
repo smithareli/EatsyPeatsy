@@ -24,7 +24,7 @@ function App() {
             fontWeight: "700",
             marginBottom:"20px",
           }}>
-        Eatsy Peatsy
+        EATSY PEATSY
         </div>
         <hr
         style={{
