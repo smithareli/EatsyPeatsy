@@ -24,7 +24,7 @@ function App() {
             fontWeight: "700",
             marginBottom:"20px",
           }}>
-        EATSY PEATSY
+        Eatsy Peatsy
         </div>
         <hr
         style={{
@@ -33,7 +33,7 @@ function App() {
           borderTop:"3px solid #EC5E5E",
           marginBottom:"20px",
         }}/>
-        <div style={{ display:"flex",flexDirection:"row", alignItems:"center",justifyContent:"space-between", width:"40%", maxWidth:"800px", gap:"20px"}}>
+        <div style={{ display:"flex",flexDirection:"row", alignItems:"center",justifyContent:"center", width:"40%", maxWidth:"800px", gap:"40px"}}>
           <SearchBar onSearch={handleSearch}/>
           <SearchButton caption="Filter" 
           icon={filter_logo}/>
