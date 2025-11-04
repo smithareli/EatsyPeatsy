@@ -4,11 +4,14 @@
 #include <string>
 #include "heap_sort.h"
 #include "Business.h"
-#include"merge_sort.h"
+#include "merge_sort.h"
 #include "include/rapidjson/document.h"
+#include "include/trie.h"
+#include "include/httplib.h"
 
 using namespace std;
 
+Trie trie;
 
 vector<string> splitCategories(const string& cats_str) {
     vector<string> result;
@@ -67,7 +70,8 @@ int main() {
         b.stars = doc["stars"].GetDouble();
         b.city = doc["city"].GetString();
 
-        b.categories.clear();
+        trie.insert(b.name);
+
         if (doc.HasMember("categories")) {
             if (doc["categories"].IsArray()) {
                 for (auto& c : doc["categories"].GetArray()) {
@@ -80,7 +84,7 @@ int main() {
             }
         }
 
-        businesses.push_back(move(b));
+        businesses.push_back(std::move(b));
     }
 
     cout << "Loaded " << businesses.size() << " businesses.\n";
@@ -108,7 +112,40 @@ int main() {
     for (auto item: tests_1){
         cout<<item->name<<","<< item->stars<<endl;
     }*/
-    
+
+
+    httplib::Server svr;
+
+    svr.Options("/autocomplete", [](const httplib::Request&, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+    });
+
+    svr.Get("/autocomplete", [](const httplib::Request& req, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+        if (!req.has_param("prefix")) {
+            res.status = 400;
+            res.set_content("{\"error\":\"missing prefix\"}", "application/json");
+            return;
+        }
+
+        string prefix = req.get_param_value("prefix");
+        auto suggestions = trie.autocomplete(prefix);
+        string json = "[";
+        for (size_t i = 0; i < suggestions.size(); i++) {
+            json += "\"" + suggestions[i] + "\"";
+            if (i != suggestions.size() - 1) json += ",";
+        }
+        json += "]";
+        res.set_content(json, "application/json");
+    });
+
+    cout << "Server listening on http://localhost:8080\n";
+    svr.listen("127.0.0.1", 8080);
 
     return 0;
 }
