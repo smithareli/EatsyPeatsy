@@ -11,13 +11,23 @@ function App() {
     document.body.style.backgroundColor="#FFF7EF";
   },[]);
 
+  const [filteredResults, setFilteredResults] = useState([]);
+
   const handleSearch=(term) => {
     console.log("User searched for:", term);
   };
 
-  const [showFilter, setShowFilter] = useState(false);
-  const toggleFilter = () => {
-    setShowFilter(!showFilter);
+  const handleFilterApply = (categories) => {
+    console.log("Selected categories:", categories);
+    if (categories.length === 0) return;
+
+    fetch(`http://localhost:8080/filter?keyword=${categories.join(',')}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("Filtered data:", data);
+        setFilteredResults(data); // Save results
+      })
+      .catch(err => console.error("Error fetching filter results:", err));
   };
 
   return (
@@ -44,107 +54,22 @@ function App() {
 
         <div style={{ display:"flex",flexDirection:"row", alignItems:"center",justifyContent:"center", width:"40%", maxWidth:"800px", gap:"40px"}}>
           <SearchBar onSearch={handleSearch}/>
-          <FilterButton onClick ={toggleFilter}/>
-
-          {showFilter && (
-            <div style={{
-              position: "absolute",
-              top: "220px",
-              right: "450px",
-              backgroundColor: "#FFF7EF",
-              border: "2px solid #EC5E5E",
-              padding: "20px",
-              width: "250px",
-              height: "300px",
-              boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
-              zIndex: 100,
-              borderRadius: "0px"
-            }}>
-  
-              <h3 style={{ fontSize: "15px", fontWeight: "700", color: "#EC5E5E" , margin: "0 0 15px 0", textAlign: "center"}}>Filter Options</h3>
-
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                columnGap: "10px",
-                rowGap: "12px",
-                paddingLeft: "10px",
-                paddingTop: "10px",
-                alignItems: "center",
-                justifyItems: "start",
-                width: "100%",
-              }}>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Italian
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Mexican
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Japanese
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Chinese
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Burgers
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Pizza
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Sandwiches
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Fast Food
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Seafood
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  American
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Cafes
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Bakeries
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Bars
-                </label>
-                <label style={{ fontSize: "14px", color: "#333" }}>
-                  <input type="checkbox" style={{ marginRight: "5px" }} />
-                  Breakfast
-                </label>
-              </div>
-            </div>
-          )}
-
+          <FilterButton onApply={handleFilterApply} /> 
         </div>
-
-        <hr style={{
-          width: "100%",
-          border: "none",
-          borderTop: "3px solid #EC5E5E",
-          marginBottom: "20px"
-        }} />
       </div>
-
       </header>
+      <main style={{ paddingTop: "350px" }}>
+        {filteredResults.length > 0 && (
+          <div>
+            <h2>Filtered Results:</h2>
+            <ul>
+              {filteredResults.map((b) => (
+                <li key={b.id}>{b.name} - {b.stars}⭐ - {b.city}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

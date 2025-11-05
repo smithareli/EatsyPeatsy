@@ -15,7 +15,6 @@
 #include "merge_sort.h"
 #include "include/rapidjson/document.h"
 #include "include/trie.h"
-
 using namespace std;
 
 Trie trie;
@@ -150,6 +149,51 @@ int main() {
         json += "]";
         res.set_content(json, "application/json");
     });
+
+    svr.Get("/filter", [&businesses](const httplib::Request& req, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+        if (!req.has_param("keyword")) {
+            res.status = 400;
+            res.set_content("{\"error\":\"missing keyword\"}", "application/json");
+            return;
+        }
+
+        string allkeywords = req.get_param_value("keyword");
+        vector<string> keywords = splitCategories(allkeywords);
+        vector<Business> filtered;
+        for (int i = 0; i<keywords.size(); i++) {
+            vector<Business> partial = filter(businesses, keywords[i]);
+            filtered.insert(filtered.end(), partial.begin(), partial.end());
+        }
+        unordered_set<string> seen;
+        vector<Business> uniqueFiltered;
+        for (const auto& b : filtered) {
+            if (seen.find(b.business_id) == seen.end()) {
+                uniqueFiltered.push_back(b);
+                seen.insert(b.business_id);
+            }
+        }
+        filtered = uniqueFiltered;
+
+        string json = "[";
+        for (size_t i = 0; i < filtered.size(); i++) {
+            const auto& b = filtered[i];
+            json += "{";
+            json += "\"id\":\"" + b.business_id + "\",";
+            json += "\"name\":\"" + b.name + "\",";
+            json += "\"stars\":" + to_string(b.stars) + ",";
+            json += "\"city\":\"" + b.city + "\"";
+            json += "}";
+            if (i != filtered.size() - 1) json += ",";
+        }
+        json += "]";
+
+        res.set_content(json, "application/json");
+    });
+
 
     cout << "Server listening on http://localhost:8080\n";
     svr.listen("127.0.0.1", 8080);
