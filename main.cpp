@@ -1,3 +1,11 @@
+#define WIN32_LEAN_AND_MEAN
+#define _WIN32_WINNT 0x0A00
+#define WINVER 0x0A00
+
+#include <windows.h>
+#undef byte
+
+#include "include/httplib.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -7,7 +15,6 @@
 #include "merge_sort.h"
 #include "include/rapidjson/document.h"
 #include "include/trie.h"
-#include "include/httplib.h"
 
 using namespace std;
 
@@ -19,12 +26,12 @@ vector<string> splitCategories(const string& cats_str) {
     for (char c : cats_str) {
         if (c == ',') {
             if (!cat.empty()) result.push_back(cat);
-            cat = "";  // reset for next category
-        } else if (c != ' ') { // skip spaces
+            cat = "";  
+        } else if (c != ' ') { 
             cat += c;
         }
     }
-    if (!cat.empty()) result.push_back(cat); // add last category
+    if (!cat.empty()) result.push_back(cat);
     return result;
 }
 
@@ -62,7 +69,7 @@ int main() {
         rapidjson::Document doc;
         doc.Parse(line.c_str());
 
-        if (doc.HasParseError()) continue; // skip invalid lines
+        if (doc.HasParseError()) continue; 
 
         Business b;
         b.business_id = doc["business_id"].GetString();
