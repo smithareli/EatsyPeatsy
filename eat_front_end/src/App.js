@@ -48,17 +48,17 @@ function App() {
 
           {showFilter && (
             <div style={{
-              position: "absolute",       // positioned relative to container
-              top: "220px",                // distance below the button
-              right: "450px",                   // align right edge of container
-              backgroundColor: "#FFF7EF",   // box color
-              border: "2px solid #EC5E5E", // border color
-              padding: "20px",            // spacing inside box
+              position: "absolute",
+              top: "220px",
+              right: "450px",
+              backgroundColor: "#FFF7EF",
+              border: "2px solid #EC5E5E",
+              padding: "20px",
               width: "250px",
-              height: "300px",         // box width
-              boxShadow: "0px 4px 8px rgba(0,0,0,0.1)", // subtle shadow
-              zIndex: 100,                // layer above other content
-              borderRadius: "0px"         // ✅ sharp edges
+              height: "300px",
+              boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
+              zIndex: 100,
+              borderRadius: "0px"
             }}>
   
               <h3 style={{ fontSize: "15px", fontWeight: "700", color: "#EC5E5E" , margin: "0 0 15px 0", textAlign: "center"}}>Filter Options</h3>
@@ -102,9 +102,33 @@ function App() {
                   <input type="checkbox" style={{ marginRight: "5px" }} />
                   Sandwiches
                 </label>
-                 <label style={{ fontSize: "14px", color: "#333" }}>
+                <label style={{ fontSize: "14px", color: "#333" }}>
                   <input type="checkbox" style={{ marginRight: "5px" }} />
                   Fast Food
+                </label>
+                <label style={{ fontSize: "14px", color: "#333" }}>
+                  <input type="checkbox" style={{ marginRight: "5px" }} />
+                  Seafood
+                </label>
+                <label style={{ fontSize: "14px", color: "#333" }}>
+                  <input type="checkbox" style={{ marginRight: "5px" }} />
+                  American
+                </label>
+                <label style={{ fontSize: "14px", color: "#333" }}>
+                  <input type="checkbox" style={{ marginRight: "5px" }} />
+                  Cafes
+                </label>
+                <label style={{ fontSize: "14px", color: "#333" }}>
+                  <input type="checkbox" style={{ marginRight: "5px" }} />
+                  Bakeries
+                </label>
+                <label style={{ fontSize: "14px", color: "#333" }}>
+                  <input type="checkbox" style={{ marginRight: "5px" }} />
+                  Bars
+                </label>
+                <label style={{ fontSize: "14px", color: "#333" }}>
+                  <input type="checkbox" style={{ marginRight: "5px" }} />
+                  Breakfast
                 </label>
               </div>
             </div>
