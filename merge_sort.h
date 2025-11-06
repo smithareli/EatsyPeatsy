@@ -2,12 +2,12 @@
 #include <vector>
 #include "Business.h"
 using namespace std;
-void merge(vector<Business*>& businesses, int start, int mid, int end){
-    vector<Business*> temp;
+void merge(vector<Business>& businesses, int start, int mid, int end){
+    vector<Business> temp;
     int i=start;
     int j=mid+1;
     while(i<=mid && j<=end){
-        if(businesses[i]->stars>=businesses[j]->stars){
+        if(businesses[i].stars>=businesses[j].stars){
             temp.push_back(businesses[i]);
             i+=1;
         }
@@ -29,7 +29,7 @@ void merge(vector<Business*>& businesses, int start, int mid, int end){
     }
     
 }
-void mergesort(vector<Business*>& businesses, int start, int end){
+void mergesort(vector<Business>& businesses, int start, int end){
     if (start<end){
         int middle=(start+end)/2;
         mergesort(businesses,start, middle);

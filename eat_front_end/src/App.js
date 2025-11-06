@@ -5,22 +5,35 @@ import filter_logo from'./filter-horizontal.svg';
 import './App.css';
 import SearchButton from './SearchButton';
 import FilterButton from './FilterButton'
+import Infocard from "./Infocard";
 
 function App() {
-  useEffect(() => {
-    document.body.style.backgroundColor="#FFF7EF";
-  },[]);
+    const[noFilter, setNoFilter] = useState([])
+ useEffect(() => {
+  document.body.style.backgroundColor = "#FFF7EF";
+  fetch("http://localhost:8080/full")
+    .then(res => res.json())
+    .then(data => {
+      setNoFilter(data);
+    })
+    .catch(err => {
+      console.error("Fetch error:", err);
+    });
+}, []);
+
 
   const [filteredResults, setFilteredResults] = useState([]);
-
   const handleSearch=(term) => {
     console.log("User searched for:", term);
   };
+  
 
   const handleFilterApply = (categories) => {
     console.log("Selected categories:", categories);
-    if (categories.length === 0) return;
-
+    if (categories.length === 0) {
+      setFilteredResults([]);
+      return;
+    }
     fetch(`http://localhost:8080/filter?keyword=${categories.join(',')}`)
       .then(res => res.json())
       .then(data => {
@@ -29,6 +42,7 @@ function App() {
       })
       .catch(err => console.error("Error fetching filter results:", err));
   };
+  
 
   return (
     <div className="App">
@@ -57,21 +71,17 @@ function App() {
           <FilterButton onApply={handleFilterApply} /> 
         </div>
       </div>
+      
       </header>
-      <main style={{ paddingTop: "350px" }}>
-        {filteredResults.length > 0 && (
-          <div>
-            <h2>Filtered Results:</h2>
-            <ul>
-              {filteredResults.map((b) => (
-                <li key={b.id}>{b.name} - {b.stars}⭐ - {b.city}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </main>
+      <div style={{ maxWidth:"900px", margin:"40px auto"}}>
+               { ( <Infocard data={filteredResults.length>0? filteredResults: noFilter}/>)}
+      </div>
     </div>
   );
-}
+} 
 
 export default App;
+/*
+(<Infocard data={filteredResults}/>):
+        ( <Infocard data={noFilter}/>)
+         */

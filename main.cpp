@@ -19,6 +19,7 @@ using namespace std;
 
 Trie trie;
 
+
 vector<string> splitCategories(const string& cats_str) {
     vector<string> result;
     string cat;
@@ -53,6 +54,23 @@ vector<Business> filter(vector<Business>& list, string keyword){
     }
     return result;
 }
+string escapeJson(const string& input) {
+    string output;
+    for (char c : input) {
+        switch (c) {
+            case '\"': output += "\\\""; break;
+            case '\\': output += "\\\\"; break;
+            case '\b': output += "\\b"; break;
+            case '\f': output += "\\f"; break;
+            case '\n': output += "\\n"; break;
+            case '\r': output += "\\r"; break;
+            case '\t': output += "\\t"; break;
+            default: output += c; break;
+        }
+    }
+    return output;
+}
+
 
 int main() {
     ifstream file("yelp_academic_dataset_business.json");
@@ -107,7 +125,8 @@ int main() {
         cout << "\n----------------\n";
     }
     cout<< "New size: " << businesses.size();
-
+    BinaryHeap final= BinaryHeap();
+    vector<Business> businesses_final=final.heapsort(businesses,businesses.size());
     /////testing//// 
     /*BinaryHeap test_1= BinaryHeap();
     vector <Business*> final=test_1.heapsort(tests_1, 5);
@@ -149,6 +168,29 @@ int main() {
         json += "]";
         res.set_content(json, "application/json");
     });
+     svr.Get("/full", [&businesses_final](const httplib::Request& req, httplib::Response& res) {
+        res.set_header("Access-Control-Allow-Origin", "*");
+        res.set_header("Access-Control-Allow-Methods", "GET, OPTIONS");
+        res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+        
+        string json = "[";
+        for (size_t i = 0; i < businesses_final.size(); i++) {
+            const auto& b = businesses_final[i];
+            json += "{";
+            json += "\"id\":\"" + escapeJson(b.business_id) + "\",";
+            json += "\"name\":\"" + escapeJson(b.name) + "\",";
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(1) << b.stars;
+            json += "\"stars\":" + oss.str() + ",";
+            json += "\"city\":\"" + escapeJson(b.city) + "\"";
+            json += "}";
+            if (i != businesses_final.size() - 1) json += ",";
+        }
+        json += "]";
+
+        res.set_content(json, "application/json");
+    });
 
     svr.Get("/filter", [&businesses](const httplib::Request& req, httplib::Response& res) {
         res.set_header("Access-Control-Allow-Origin", "*");
@@ -177,15 +219,18 @@ int main() {
             }
         }
         filtered = uniqueFiltered;
+        mergesort(filtered,0,filtered.size()-1);
 
         string json = "[";
         for (size_t i = 0; i < filtered.size(); i++) {
             const auto& b = filtered[i];
             json += "{";
-            json += "\"id\":\"" + b.business_id + "\",";
-            json += "\"name\":\"" + b.name + "\",";
-            json += "\"stars\":" + to_string(b.stars) + ",";
-            json += "\"city\":\"" + b.city + "\"";
+            json += "\"id\":\"" + escapeJson(b.business_id) + "\",";
+            json += "\"name\":\"" + escapeJson(b.name) + "\",";
+            std::ostringstream oss;
+            oss << std::fixed << std::setprecision(1) << b.stars;
+            json += "\"stars\":" + oss.str() + ",";
+            json += "\"city\":\"" + escapeJson(b.city) + "\"";
             json += "}";
             if (i != filtered.size() - 1) json += ",";
         }
