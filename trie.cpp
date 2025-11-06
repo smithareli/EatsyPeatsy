@@ -7,7 +7,7 @@ Trie::Trie() {
     root = new TrieNode();
 }
 
-void Trie::insert(const std::string& word) {
+void Trie::insert(const string& word) {
     TrieNode* node = root;
     for (char c : word) {
         c = tolower(c);
@@ -19,12 +19,13 @@ void Trie::insert(const std::string& word) {
 }
 
 void Trie::collectAllWords(TrieNode* node, string prefix, vector<string>& results) {
+    if (!node) return;
     if (node->isEnd) results.push_back(prefix);
     for (auto& pair : node->children)
         collectAllWords(pair.second, prefix + pair.first, results);
 }
 
-std::vector<std::string> Trie::autocomplete(const string& prefix) {
+std::vector<string> Trie::autocomplete(const string& prefix) {
     TrieNode* node = root;
     for (char c : prefix) {
         c = tolower(c);

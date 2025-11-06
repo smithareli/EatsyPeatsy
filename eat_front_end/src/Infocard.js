@@ -2,10 +2,10 @@ import React,{useEffect, useState} from "react";
 const Infocard=({data=[]})=>{
     const[visibleCount, setVisibleCount] = useState(3);
     useEffect(()=>{
-        setVisibleCount(3);
+        setVisibleCount(12);
     },[data]);
     const handleShowMore=()=>{
-        setVisibleCount(prev=>prev+3);
+        setVisibleCount(prev=>prev+12);
     };
 
     return(

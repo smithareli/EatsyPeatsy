@@ -47,7 +47,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div style={{position:"fixed", top:0, left:0,width:"100%", display:"flex",flexDirection:"column", alignItems:"center", paddingTop:"20px", paddingBottom:"10px",zIndex:1000,}}>
+        <div style={{top:0, left:0,width:"100%", display:"flex",flexDirection:"column", alignItems:"center", zIndex:1000,}}>
         
         
         <div style={{
