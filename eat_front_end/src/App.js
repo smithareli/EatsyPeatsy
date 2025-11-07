@@ -70,18 +70,23 @@ function App() {
           <SearchBar onSearch={handleSearch}/>
           <FilterButton onApply={handleFilterApply} /> 
         </div>
+        <hr
+        style={{
+          width:"100%",
+          border:"none",
+          borderTop:"3px solid #EC5E5E",
+          marginBottom:"0px",
+        }}/>
+        
       </div>
       
       </header>
       <div style={{ maxWidth:"900px", margin:"40px auto"}}>
                { ( <Infocard data={filteredResults.length>0? filteredResults: noFilter}/>)}
       </div>
+      
     </div>
   );
 } 
 
 export default App;
-/*
-(<Infocard data={filteredResults}/>):
-        ( <Infocard data={noFilter}/>)
-         */
