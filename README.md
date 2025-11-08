@@ -12,3 +12,12 @@ Instructions for running code on a MacOS device:
 3. Open new terminal and run
    cd eat_front_end
    npm start
+   
+Instructions for running on a Windows device:
+1. Open terminal and run
+      g++ -std=c++17 main.cpp trie.cpp -Iinclude -lws2_32 -lwinmm -o backend_server.exe
+      ./backend_server.exe
+2. Open new terminal and run
+      cd eat_front_end
+      npm start
+   
