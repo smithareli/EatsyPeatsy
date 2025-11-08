@@ -9,6 +9,8 @@ import Infocard from "./Infocard";
 
 function App() {
     const[noFilter, setNoFilter] = useState([])
+    const [filteredResults, setFilteredResults] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
  useEffect(() => {
   document.body.style.backgroundColor = "#FFF7EF";
   fetch("http://localhost:8080/full")
@@ -21,12 +23,23 @@ function App() {
     });
 }, []);
 
-
-  const [filteredResults, setFilteredResults] = useState([]);
   const handleSearch=(term) => {
-    console.log("User searched for:", term);
+    setSearchTerm(term);
   };
   
+  const handleSearchButtonClick = async() => {
+    if (!searchTerm) {
+    setFilteredResults([]);
+    return;
+  }
+
+  const filtered = noFilter.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  console.log("Filtered full results:", filtered);
+  setFilteredResults(filtered);
+  };
 
   const handleFilterApply = (categories) => {
     console.log("Selected categories:", categories);
@@ -67,7 +80,8 @@ function App() {
         }}/>
 
         <div style={{ display:"flex",flexDirection:"row", alignItems:"center",justifyContent:"center", width:"40%", maxWidth:"800px", gap:"40px"}}>
-          <SearchBar onSearch={handleSearch}/>
+          <SearchBar onSearch={handleSearch} onEnter={handleSearchButtonClick} />
+          <SearchButton onClick={handleSearchButtonClick} />
           <FilterButton onApply={handleFilterApply} /> 
         </div>
         <hr
@@ -82,7 +96,12 @@ function App() {
       
       </header>
       <div style={{ maxWidth:"900px", margin:"40px auto"}}>
-               { ( <Infocard data={filteredResults.length>0? filteredResults: noFilter}/>)}
+               {filteredResults.length > 0 ? (
+                  <Infocard data={filteredResults} />
+                ) : (
+                  <Infocard data={noFilter} />
+                )}
+
       </div>
       
     </div>

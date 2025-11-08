@@ -25,7 +25,7 @@ void Trie::collectAllWords(TrieNode* node, string prefix, vector<string>& result
         collectAllWords(pair.second, prefix + pair.first, results);
 }
 
-std::vector<string> Trie::autocomplete(const string& prefix) {
+vector<string> Trie::autocomplete(const string& prefix) {
     TrieNode* node = root;
     for (char c : prefix) {
         c = tolower(c);

@@ -168,6 +168,50 @@ int main() {
         json += "]";
         res.set_content(json, "application/json");
     });
+
+    svr.Get("/search", [&businesses_final](const httplib::Request& req, httplib::Response& res) {
+    res.set_header("Access-Control-Allow-Origin", "*");
+    res.set_header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.set_header("Access-Control-Allow-Headers", "Content-Type");
+
+    if (!req.has_param("prefix")) {
+        res.status = 400;
+        res.set_content("{\"error\":\"missing prefix\"}", "application/json");
+        return;
+    }
+
+    string prefix = req.get_param_value("prefix");
+    auto suggestions = trie.autocomplete(prefix);
+
+    vector<Business> matched;
+    for (const auto& name : suggestions) {
+        for (const auto& b : businesses_final) {
+            if (b.name == name) {
+                matched.push_back(b);
+                break;
+            }
+        }
+    }
+
+    string json = "[";
+    for (size_t i = 0; i < matched.size(); i++) {
+        const auto& b = matched[i];
+        json += "{";
+        json += "\"id\":\"" + escapeJson(b.business_id) + "\",";
+        json += "\"name\":\"" + escapeJson(b.name) + "\",";
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(1) << b.stars;
+        json += "\"stars\":" + oss.str() + ",";
+        json += "\"city\":\"" + escapeJson(b.city) + "\"";
+        json += "}";
+        if (i != matched.size() - 1) json += ",";
+    }
+    json += "]";
+
+    res.set_content(json, "application/json");
+});
+
+    
      svr.Get("/full", [&businesses_final](const httplib::Request& req, httplib::Response& res) {
         res.set_header("Access-Control-Allow-Origin", "*");
         res.set_header("Access-Control-Allow-Methods", "GET, OPTIONS");

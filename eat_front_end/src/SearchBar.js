@@ -1,7 +1,8 @@
-import React,{useState, useEffect} from "react";
-function SearchBar({ onSearch }){
+import React,{useState, useEffect, useRef} from "react";
+function SearchBar({ onSearch, onEnter }){
     const [searchTerm, setSearchTerm]= useState('');
     const [suggestions, setSuggestions] = useState([]);
+    const containerRef = useRef(null);
     const handleChange= async (event)=>{
         const value = event.target.value;
         setSearchTerm(value);
@@ -22,10 +23,31 @@ function SearchBar({ onSearch }){
     const handleSelect = (suggestion) => {
       setSearchTerm(suggestion);
       setSuggestions([]);
+      onSearch(suggestion);
     };
 
+    const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (onEnter) onEnter(); 
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setSuggestions([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
     return(
-        <div style={{ position: "relative", width: "100%" }}>
+        <div ref={containerRef} style={{ position: "relative", width: "100%" }}>
         <input 
         style={{
             padding:"10px 15px",
@@ -40,6 +62,7 @@ function SearchBar({ onSearch }){
         placeholder='Search...'
         value={searchTerm}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         />
         {suggestions.length > 0 && (
         <ul 

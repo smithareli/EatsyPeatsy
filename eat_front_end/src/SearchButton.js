@@ -1,5 +1,7 @@
 import React from 'react'
-function SearchButton(props){
+import search_button from './search-button.svg'
+
+function SearchButton({ onClick }){
     return(
         <button
         style={{
@@ -7,8 +9,9 @@ function SearchButton(props){
             border:'none',
             cursor:'pointer',
         }}
+        onClick={onClick}
         >
-            <img src={props.icon} alt="icon" width="24" height="24" /> 
+            <img src={search_button} alt="icon" width="24" height="24" /> 
             </button>
     );
 }
