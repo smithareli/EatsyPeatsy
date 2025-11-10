@@ -115,28 +115,9 @@ int main() {
     vector<Business*> tests_1;
     businesses = filter(businesses, "Restaurants");
 
-    // Example: print first 5 businesses
-    for (size_t i = 0; i < 100 && i < businesses.size(); ++i) {
-        const auto& b = businesses[i];
-        tests_1.push_back(&businesses[i]);
-        cout << b.business_id << ", " << b.name << ", " << b.stars << ", " << b.city << "\n";
-        cout << "Categories: ";
-        for (const auto& cat : b.categories) cout << cat << " ";
-        cout << "\n----------------\n";
-    }
-    cout<< "New size: " << businesses.size();
+
     BinaryHeap final= BinaryHeap();
     vector<Business> businesses_final=final.heapsort(businesses,businesses.size());
-    /////testing//// 
-    /*BinaryHeap test_1= BinaryHeap();
-    vector <Business*> final=test_1.heapsort(tests_1, 5);
-    for (auto item: final){
-        cout<<item->name<<","<< item->stars<<endl;
-    }
-    mergesort(tests_1,0,4);
-    for (auto item: tests_1){
-        cout<<item->name<<","<< item->stars<<endl;
-    }*/
 
 
     httplib::Server svr;
